@@ -54,7 +54,7 @@ Copyright (C) 2012 Apple Inc. All Rights Reserved.
 
 #define kNumberBuffers 3
 #define kNumberOfPacket 1
-#define kPlayerBufferSize 64000
+#define kPlayerBufferSize 65536
 
 class AQPlayer
 	{

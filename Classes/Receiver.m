@@ -76,14 +76,14 @@
     assert(self.filePath == nil);           // ditto
     
     // Open a stream for the file we're going to receive into.
-    
+    /*
     self.filePath = [[NetworkManager sharedInstance] pathForTemporaryFileWithPrefix:@"Receive"];
     assert(self.filePath != nil);
     
     self.fileStream = [NSOutputStream outputStreamToFileAtPath:self.filePath append:NO];
     assert(self.fileStream != nil);
     
-    [self.fileStream open];
+    [self.fileStream open];*/
     
     // Open a stream based on the existing socket file descriptor.  Then configure
     // the stream for async operation.

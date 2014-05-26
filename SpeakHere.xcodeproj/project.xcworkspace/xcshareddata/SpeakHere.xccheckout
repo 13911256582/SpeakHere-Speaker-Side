@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>FDC13D38-32CE-45BC-914B-5536813E7845</string>
+	<key>IDESourceControlProjectName</key>
+	<string>SpeakHere</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>5C6B815D-04D0-4F2C-8A09-B48CB71BF333</key>
+		<string>https://github.com/13911256582/SpeakHere-Speaker-Side.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>SpeakHere.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>5C6B815D-04D0-4F2C-8A09-B48CB71BF333</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/13911256582/SpeakHere-Speaker-Side.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>5C6B815D-04D0-4F2C-8A09-B48CB71BF333</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>5C6B815D-04D0-4F2C-8A09-B48CB71BF333</string>
+			<key>IDESourceControlWCCName</key>
+			<string>SpeakHere-Speaker-Side</string>
+		</dict>
+	</array>
+</dict>
+</plist>
