@@ -26,6 +26,8 @@ enum {
 @synthesize fileStream    = _fileStream;
 @synthesize bufferOffset  = _bufferOffset;
 @synthesize bufferLimit   = _bufferLimit;
+@synthesize totalFrames   = _totalFrames;
+@synthesize inBufferArray = _inBufferArray;
 
 
 // Because buffer is declared as an array, you have to use a custom getter.
@@ -35,6 +37,25 @@ enum {
 {
     return self->_buffer;
 }
+
+- (NSMutableArray *)inBufferArray {
+    
+    if (!_inBufferArray){
+        _inBufferArray = [[NSMutableArray alloc]init];
+    }
+    
+    return _inBufferArray;
+}
+
++ (Sender *)getSharedInstance{
+    static Sender *sender;
+    
+    if (!sender) {
+        sender =[[Sender alloc]init];
+    }
+    return sender;
+}
+
 
 #pragma mark * Status management
 
@@ -56,6 +77,8 @@ enum {
     NSOutputStream *    output;
     BOOL                success;
     NSNetService *      netService;
+    
+    _totalFrames = 0;
     
     //assert(filePath != nil);
     
@@ -82,6 +105,7 @@ enum {
     success = [netService qNetworkAdditions_getInputStream:NULL outputStream:&output];
     assert(success);
     
+    self.canSendNow = TRUE;
     self.networkStream = output;
     self.networkStream.delegate = self;
     [self.networkStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
@@ -127,36 +151,59 @@ enum {
         case NSStreamEventHasSpaceAvailable: {
             [self updateStatus:@"Sending"];
             
+            self.canSendNow = TRUE;
+            
+            NSMutableArray *inBufferArray = self.inBufferArray;
+            
+            if (![inBufferArray count]) {
+                break;
+            }else {
+                NSData *dataToSend = [inBufferArray firstObject];
+                [inBufferArray removeObject:0];
+                
+                NSInteger bytesWritten;
+                
+                bytesWritten = [self.networkStream write:[dataToSend bytes] maxLength:[dataToSend length]];
+                
+                self.canSendNow = FALSE;
+                
+                NSLog(@"%d bytes written", bytesWritten);
+            }
+            
             // If we don't have any data buffered, go read the next chunk of data.
             
             /*if (self.bufferOffset == self.bufferLimit) {
-                NSInteger   bytesRead;
-                
-                bytesRead = [self.fileStream read:self.buffer maxLength:kSendBufferSize];
-                
-                if (bytesRead == -1) {
-                    [self stopSendWithStatus:@"File read error"];
-                } else if (bytesRead == 0) {
-                    [self stopSendWithStatus:nil];
-                } else {
-                    self.bufferOffset = 0;
-                    self.bufferLimit  = bytesRead;
-                }
-            }*/
+             NSInteger   bytesRead;
+             
+             bytesRead = [self.fileStream read:self.buffer maxLength:kSendBufferSize];
+             
+             if (bytesRead == -1) {
+             [self stopSendWithStatus:@"File read error"];
+             } else if (bytesRead == 0) {
+             [self stopSendWithStatus:nil];
+             } else {
+             self.bufferOffset = 0;
+             self.bufferLimit  = bytesRead;
+             }
+             }*/
             
             // If we're not out of data completely, send the next chunk.
             
-            if (self.bufferOffset != self.bufferLimit) {
-                NSInteger   bytesWritten;
-                
-                bytesWritten = [self.networkStream write:&self.buffer[self.bufferOffset] maxLength:self.bufferLimit - self.bufferOffset];
-                assert(bytesWritten != 0);
-                if (bytesWritten == -1) {
-                    [self stopSendWithStatus:@"Network write error"];
-                } else {
-                    self.bufferOffset += bytesWritten;
-                }
-            }
+            /*if (self.bufferOffset != self.bufferLimit) {
+             NSInteger   bytesWritten;
+             
+             bytesWritten = [self.networkStream write:&self.buffer[self.bufferOffset] maxLength:self.bufferLimit - self.bufferOffset];
+             
+             _totalFrames++;
+             NSLog(@"write number %d", _totalFrames);
+             
+             assert(bytesWritten != 0);
+             if (bytesWritten == -1) {
+             [self stopSendWithStatus:@"Network write error"];
+             } else {
+             self.bufferOffset += bytesWritten;
+             }
+             }*/
         } break;
         case NSStreamEventErrorOccurred: {
             [self stopSendWithStatus:@"Stream open error"];
@@ -188,7 +235,7 @@ enum {
 }
 
 - (void)updateStatus:(NSString *)status {
-    NSLog(@"%@", status);
+    //NSLog(@"%@", status);
 }
 
 

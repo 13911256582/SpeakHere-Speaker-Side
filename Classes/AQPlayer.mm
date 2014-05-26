@@ -61,27 +61,48 @@ void AQPlayer::AQBufferCallback(void *					inUserData,
 
 	//UInt32 numBytes;
 	//UInt32 nPackets = THIS->GetNumPacketsToRead();
+    UInt32 nPackets = 1;
     
-    NSMutableArray *outBufferArray  = [Receiver sharedOutBufferArray];
-    NSData *outData = [outBufferArray firstObject];
-    NSLog(@"out buffer count %d", [outBufferArray count]);
+    Receiver *voiceReceiver = [Receiver getSharedInstance];
     
-    if (!outData) {
-        //NSLog(@"player buffer out of data");
-        
+    NSMutableArray *outBufferArray  = [voiceReceiver outBufferArray];
+
+    //NSLog(@"out buffer count %d", [outBufferArray count]);
+    
+    
+    int count = [outBufferArray count];
+    
+    if (!count) {
+        //no audio data, fill buffer with zero
         uint8_t bytes[4096];
         memset(bytes, 0, sizeof(bytes));
         
         memcpy(inCompleteAQBuffer->mAudioData, bytes, 4096);
         
         inCompleteAQBuffer->mAudioDataByteSize = 4096;
-        inCompleteAQBuffer->mPacketDescriptionCount = 1;
+        inCompleteAQBuffer->mPacketDescriptionCount = 0;
         
         AudioQueueEnqueueBuffer(inAQ, inCompleteAQBuffer, 0, NULL);
+    } else {
+    
+        NSData *outData;
         
-        //NSLog(@"padding 0 to playback queue, size %d", 4096);
-
-
+        inCompleteAQBuffer->mAudioDataByteSize = 0;
+        inCompleteAQBuffer->mPacketDescriptionCount = 0;
+        int bufferToFill = kPlayerBufferSize;
+        
+        while ((outData = [outBufferArray firstObject])) {
+            int numOfBytes = [outData length];
+            if (numOfBytes <= bufferToFill) {
+                memcpy(inCompleteAQBuffer->mAudioData, (uint8_t*)outData.bytes, numOfBytes);
+                inCompleteAQBuffer->mAudioDataByteSize += numOfBytes;
+                //remove data from queuey
+                [outBufferArray removeObjectAtIndex:0];
+                bufferToFill -= numOfBytes;
+            } else {
+                break;
+            }
+        }
        /*if (true)
 		{
 			THIS->mCurrentPacket = 0;
@@ -94,32 +115,22 @@ void AQPlayer::AQBufferCallback(void *					inUserData,
 			AudioQueueStop(inAQ, false);
 		}*/
         
-    } else {
-        
-            UInt32 nPackets = 1;
+            //UInt32 nPackets = 1;
 	/*OSStatus result = AudioFileReadPackets(THIS->GetAudioFileID(), false, &numBytes, inCompleteAQBuffer->mPacketDescriptions, THIS->GetCurrentPacket(), &nPackets,
 										   inCompleteAQBuffer->mAudioData);
 	if (result)
 		printf("AudioFileReadPackets failed: %d", (int)result);*/
         
-            [outBufferArray removeObjectAtIndex:0]; //remove first object
-            
-            uint8_t *bytes = (uint8_t*)outData.bytes;
-            int numOfBytes = outData.length;
-            
-            memcpy(inCompleteAQBuffer->mAudioData, bytes, numOfBytes);
-        
-            inCompleteAQBuffer->mAudioDataByteSize = numOfBytes;
-            inCompleteAQBuffer->mPacketDescriptionCount = nPackets;
     
-            AudioQueueEnqueueBuffer(inAQ, inCompleteAQBuffer, 0, NULL);
+        AudioQueueEnqueueBuffer(inAQ, inCompleteAQBuffer, 0, NULL);
+        NSLog(@"audio in queue %d", (unsigned int)inCompleteAQBuffer->mAudioDataByteSize);
         
-            outData = nil;
+        outData = nil;
         
-            //NSLog(@"buffer call back, fill data to playback queue, size %d", numOfBytes);
+        //NSLog(@"buffer call back, fill data to playback queue, size %d", numOfBytes);
 
             
-            THIS->mCurrentPacket = (THIS->GetCurrentPacket() + nPackets);
+        THIS->mCurrentPacket = (THIS->GetCurrentPacket() + nPackets);
     
 	} 
 	
@@ -273,6 +284,8 @@ void AQPlayer::SetupAudioFormat(UInt32 inFormatID)
 		mDataFormat.mBitsPerChannel = 16;
 		mDataFormat.mBytesPerPacket = mDataFormat.mBytesPerFrame = (mDataFormat.mBitsPerChannel / 8) * mDataFormat.mChannelsPerFrame;
 		mDataFormat.mFramesPerPacket = 1;
+        NSLog(@"channel per frame: %d", (unsigned int)mDataFormat.mChannelsPerFrame);
+        NSLog(@"bytes per packet: %d", (unsigned int)mDataFormat.mBytesPerPacket);
 	}
 }
 
@@ -329,8 +342,10 @@ void AQPlayer::SetupNewQueue()
 	
 	XThrowIfError(AudioQueueAddPropertyListener(mQueue, kAudioQueueProperty_IsRunning, isRunningProc, this), "adding property listener");
 	
-	bool isFormatVBR = (mDataFormat.mBytesPerPacket == 0 || mDataFormat.mFramesPerPacket == 0);
-	for (int i = 0; i < kNumberBuffers; ++i) {
+	//bool isFormatVBR = (mDataFormat.mBytesPerPacket == 0 || mDataFormat.mFramesPerPacket == 0);
+	bool isFormatVBR = false;
+    
+    for (int i = 0; i < kNumberBuffers; ++i) {
 		XThrowIfError(AudioQueueAllocateBufferWithPacketDescriptions(mQueue, bufferByteSize, (isFormatVBR ? mNumPacketsToRead : 0), &mBuffers[i]), "AudioQueueAllocateBuffer failed");
 	}
     

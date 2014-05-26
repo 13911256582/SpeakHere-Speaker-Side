@@ -23,5 +23,11 @@
 @property (nonatomic, assign, readonly ) uint8_t *          buffer;
 @property (nonatomic, assign, readwrite) size_t             bufferOffset;
 @property (nonatomic, assign, readwrite) size_t             bufferLimit;
+@property (nonatomic, assign, readwrite) int                totalFrames;
+@property (nonatomic, assign, readwrite) BOOL                canSendNow;
+@property (nonatomic, assign, readwrite) NSMutableArray      *inBufferArray;
+
+- (NSMutableArray *)inBufferArray;
++ (Sender *)getSharedInstance;
 
 @end
