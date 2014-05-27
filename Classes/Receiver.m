@@ -27,16 +27,25 @@
 @synthesize listeningSocket = _listeningSocket;
 @synthesize fileStream      = _fileStream;
 @synthesize filePath        = _filePath;
+@synthesize outBufferArray  = _outBufferArray;
 
 
-+ (NSMutableArray *)sharedOutBufferArray {
-    static NSMutableArray *outBufferArray;
++ (Receiver *)getSharedInstance{
+    static Receiver *receiver;
     
-    if (!outBufferArray){
-        outBufferArray = [[NSMutableArray alloc]init];
+    if (!receiver) {
+        receiver =[[Receiver alloc]init];
+    }
+    return receiver;
+}
+
+- (NSMutableArray *)outBufferArray {
+    
+    if (!_outBufferArray){
+        _outBufferArray = [[NSMutableArray alloc]init];
     }
     
-    return outBufferArray;
+    return _outBufferArray;
 }
 
 - (void)didStartNetworkOperation {
@@ -160,8 +169,9 @@
                 _totalFrames++;
                 NSLog(@"received data: %d", _totalFrames);
                 
+                Receiver *voiceReceiver = [Receiver getSharedInstance];
                 //write to outBufferArray
-                NSMutableArray  *outBufferArray = [Receiver sharedOutBufferArray];
+                NSMutableArray  *outBufferArray = [voiceReceiver outBufferArray];
                 [outBufferArray addObject:receivedData];
                 
                 /*bytesWrittenSoFar = 0;

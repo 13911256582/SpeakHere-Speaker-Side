@@ -63,7 +63,9 @@ void AQPlayer::AQBufferCallback(void *					inUserData,
 	//UInt32 nPackets = THIS->GetNumPacketsToRead();
     UInt32 nPackets = 1;
     
-    NSMutableArray *outBufferArray  = [Receiver sharedOutBufferArray];
+    Receiver *voiceReceiver = [Receiver getSharedInstance];
+    
+    NSMutableArray *outBufferArray  = [voiceReceiver outBufferArray];
 
     //NSLog(@"out buffer count %d", [outBufferArray count]);
     
@@ -121,6 +123,7 @@ void AQPlayer::AQBufferCallback(void *					inUserData,
         
     
         AudioQueueEnqueueBuffer(inAQ, inCompleteAQBuffer, 0, NULL);
+        NSLog(@"audio in queue %d", (unsigned int)inCompleteAQBuffer->mAudioDataByteSize);
         
         outData = nil;
         
@@ -281,6 +284,8 @@ void AQPlayer::SetupAudioFormat(UInt32 inFormatID)
 		mDataFormat.mBitsPerChannel = 16;
 		mDataFormat.mBytesPerPacket = mDataFormat.mBytesPerFrame = (mDataFormat.mBitsPerChannel / 8) * mDataFormat.mChannelsPerFrame;
 		mDataFormat.mFramesPerPacket = 1;
+        NSLog(@"channel per frame: %d", (unsigned int)mDataFormat.mChannelsPerFrame);
+        NSLog(@"bytes per packet: %d", (unsigned int)mDataFormat.mBytesPerPacket);
 	}
 }
 

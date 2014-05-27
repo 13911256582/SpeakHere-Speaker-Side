@@ -26,11 +26,12 @@
 @property (nonatomic, strong, readwrite) NSOutputStream *   fileStream;
 @property (nonatomic, copy,   readwrite) NSString *         filePath;
 @property (nonatomic, assign, readwrite) int                totalFrames;
+@property (nonatomic, assign, readwrite) NSMutableArray     *outBufferArray;
 
 // forward declarations
 
 - (void)stopServer:(NSString *)reason;
-
-+ (NSMutableArray *)sharedOutBufferArray;
+- (NSMutableArray *)outBufferArray;
++ (Receiver*)getSharedInstance;
 
 @end
