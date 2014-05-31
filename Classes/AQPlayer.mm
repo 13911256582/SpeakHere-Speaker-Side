@@ -72,30 +72,40 @@ void AQPlayer::AQBufferCallback(void *					inUserData,
     
     int count = [outBufferArray count];
     
+
     if (!count) {
         //no audio data, fill buffer with zero
-        uint8_t bytes[4096];
-        memset(bytes, 0, sizeof(bytes));
+        const int fillSize = 4410;
+        uint8_t bytes[fillSize];
+
+            memset(bytes, 0, sizeof(bytes));
         
-        memcpy(inCompleteAQBuffer->mAudioData, bytes, 4096);
+            memcpy(inCompleteAQBuffer->mAudioData, bytes, fillSize);
         
-        inCompleteAQBuffer->mAudioDataByteSize = 4096;
-        inCompleteAQBuffer->mPacketDescriptionCount = 0;
+            inCompleteAQBuffer->mAudioDataByteSize = fillSize;
+            inCompleteAQBuffer->mPacketDescriptionCount = 0;
         
-        AudioQueueEnqueueBuffer(inAQ, inCompleteAQBuffer, 0, NULL);
+            AudioQueueEnqueueBuffer(inAQ, inCompleteAQBuffer, 0, NULL);
+
     } else {
     
         NSData *outData;
+        NSMutableData *voiceBuffer = [NSMutableData dataWithCapacity:kPlayerBufferSize];
+        int bufferToFill = kPlayerBufferSize;
+        int voiceBufferSize = 0;
         
         inCompleteAQBuffer->mAudioDataByteSize = 0;
         inCompleteAQBuffer->mPacketDescriptionCount = 0;
-        int bufferToFill = kPlayerBufferSize;
         
-        while ((outData = [outBufferArray firstObject])) {
+        
+        while ([outBufferArray count]) {
+            outData = [outBufferArray firstObject];
             int numOfBytes = [outData length];
             if (numOfBytes <= bufferToFill) {
-                memcpy(inCompleteAQBuffer->mAudioData, (uint8_t*)outData.bytes, numOfBytes);
-                inCompleteAQBuffer->mAudioDataByteSize += numOfBytes;
+                
+                [voiceBuffer appendData:outData];
+                voiceBufferSize += numOfBytes;
+
                 //remove data from queuey
                 [outBufferArray removeObjectAtIndex:0];
                 bufferToFill -= numOfBytes;
@@ -120,12 +130,14 @@ void AQPlayer::AQBufferCallback(void *					inUserData,
 										   inCompleteAQBuffer->mAudioData);
 	if (result)
 		printf("AudioFileReadPackets failed: %d", (int)result);*/
-        
+        memcpy(inCompleteAQBuffer->mAudioData, [voiceBuffer bytes], voiceBufferSize);
+        inCompleteAQBuffer->mAudioDataByteSize = voiceBufferSize;
     
         AudioQueueEnqueueBuffer(inAQ, inCompleteAQBuffer, 0, NULL);
         NSLog(@"audio in queue %d", (unsigned int)inCompleteAQBuffer->mAudioDataByteSize);
         
         outData = nil;
+        voiceBuffer = nil;
         
         //NSLog(@"buffer call back, fill data to playback queue, size %d", numOfBytes);
 

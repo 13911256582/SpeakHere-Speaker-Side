@@ -167,7 +167,7 @@
                 //write to player
                 NSData *receivedData = [[NSData alloc]initWithBytes:buffer length:bytesRead];
                 _totalFrames++;
-                NSLog(@"received data: %d", _totalFrames);
+                NSLog(@"bytes received: %d", bytesRead);
                 
                 Receiver *voiceReceiver = [Receiver getSharedInstance];
                 //write to outBufferArray
