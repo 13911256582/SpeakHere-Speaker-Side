@@ -54,18 +54,6 @@ Copyright (C) 2012 Apple Inc. All Rights Reserved.
 
 
 
-@interface SpeakHereController () 
-@property (nonatomic, strong, readwrite) IBOutlet UILabel *                   statusLabel;
-@property (nonatomic, strong, readwrite) IBOutlet UIActivityIndicatorView *   activityIndicator;
-@property (nonatomic, strong, readwrite) IBOutlet UIButton *                  cancelButton;
-
-
-// private properties
-
-@end
-
-
-
 @implementation SpeakHereController
 
 
@@ -80,12 +68,9 @@ Copyright (C) 2012 Apple Inc. All Rights Reserved.
 
 @synthesize inBackground;
 
-
-@synthesize statusLabel       = _statusLabel;
-@synthesize activityIndicator = _activityIndicator;
-@synthesize cancelButton      = _stopButton;
 @synthesize voiceSender       = _voiceSender;
 @synthesize voiceReceiver     = _voiceReceiver;
+@synthesize statusLabel       = _statusLabel;
 
 
 /*+ (Sender *)sharedSenderInstance {
@@ -181,11 +166,11 @@ char *OSTypeToStr(char *buf, OSType t)
 	player->DisposeQueue(true);
 
 	// now create a new queue for the recorded file
-	recordFilePath = (CFStringRef)[NSTemporaryDirectory() stringByAppendingPathComponent: @"recordedFile.caf"];
-	player->CreateQueueForFile(recordFilePath);
+	//recordFilePath = (CFStringRef)[NSTemporaryDirectory() stringByAppendingPathComponent: @"recordedFile.caf"];
+	//player->CreateQueueForFile(recordFilePath);
 		
 	// Set the button's state back to "record"
-	btn_record.title = @"Record";
+	btn_record.title = @"启动麦克";
 	btn_play.enabled = YES;
 }
 
@@ -195,9 +180,12 @@ char *OSTypeToStr(char *buf, OSType t)
         _voiceReceiver = [Receiver getSharedInstance];
     }
     
-    [self.voiceReceiver startServer];
-    
-    self.statusLabel.text = @"Server Started";
+    if (![_voiceReceiver isStarted]) {
+        [self.voiceReceiver startServer];
+        self.statusLabel.text = @"Server Started";
+    } else {
+        [[self voiceReceiver] stopServer:@"cancel"];
+    }
 
 	if (player->IsRunning())
 	{
@@ -224,8 +212,13 @@ char *OSTypeToStr(char *buf, OSType t)
         _voiceSender = [Sender getSharedInstance];
     }
     
-    //start network connection,
-    [self.voiceSender startSend];
+    //start network connection
+    if ([_voiceSender isSending]) {
+        [self.voiceSender stopSendWithStatus:@"cancel"];
+    }
+    else {
+        [self.voiceSender startSend];
+    }
     
 	if (recorder->IsRunning()) // If we are currently recording, stop and save the file.
 	{
@@ -236,7 +229,7 @@ char *OSTypeToStr(char *buf, OSType t)
 		btn_play.enabled = NO;	
 		
 		// Set the button's state to "stop"
-		btn_record.title = @"Stop";
+		btn_record.title = @"停止麦克";
 				
 		// Start the recorder
 		recorder->StartRecord(CFSTR("recordedFile.caf"));
@@ -383,14 +376,14 @@ void propListener(	void *                  inClientData,
 # pragma mark Notification routines
 - (void)playbackQueueStopped:(NSNotification *)note
 { 
-	btn_play.title = @"Play";
+	btn_play.title = @"启动喇叭";
 	[lvlMeter_in setAq: nil];
 	btn_record.enabled = YES;
 }
 
 - (void)playbackQueueResumed:(NSNotification *)note
 {
-	btn_play.title = @"Stop";
+	btn_play.title = @"停止喇叭";
 	btn_record.enabled = NO;
 	[lvlMeter_in setAq: player->Queue()];
 }
@@ -434,6 +427,7 @@ void propListener(	void *                  inClientData,
 	delete player;
 	delete recorder;
 	
+    [_statusLabel release];
 	[super dealloc];
 }
 
@@ -444,8 +438,6 @@ void propListener(	void *                  inClientData,
 - (void)sendDidStart
 {
     self.statusLabel.text = @"Sending";
-    self.cancelButton.enabled = YES;
-    [self.activityIndicator startAnimating];
     [self.voiceSender didStartNetworkOperation];
     
 }
@@ -462,22 +454,10 @@ void propListener(	void *                  inClientData,
         statusString = @"Send succeeded";
     }
     self.statusLabel.text = statusString;
-    self.cancelButton.enabled = NO;
-    [self.activityIndicator stopAnimating];
     [self.voiceSender didStopNetworkOperation];
 }
 
-- (IBAction)doCancel:(UIButton *)sender {
-    
-    if (self.voiceSender) {
-        [self.voiceSender cancel];
-        self.voiceSender = nil;
-    } else if (self.voiceReceiver) {
-        [self.voiceReceiver cancel];
-        self.voiceReceiver = nil;
-    }
-    
-}
+
 
 //---------------------------------------------------------------------
 //receiver side code
@@ -503,7 +483,6 @@ void propListener(	void *                  inClientData,
 - (void)receiveDidStart
 {
     self.statusLabel.text = @"Receiving";
-    [self.activityIndicator startAnimating];
     [self.voiceReceiver didStartNetworkOperation];
 }
 
@@ -513,7 +492,6 @@ void propListener(	void *                  inClientData,
         statusString = @"Receive succeeded";
     }
     self.statusLabel.text = statusString;
-    [self.activityIndicator stopAnimating];
     [self.voiceReceiver didStopNetworkOperation];
 
 }

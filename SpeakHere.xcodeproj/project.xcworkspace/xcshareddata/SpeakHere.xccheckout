@@ -5,31 +5,19 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-<<<<<<< HEAD
-	<string>07BC5413-0AAA-4904-8DC7-26E8D54E3FEF</string>
-=======
-	<string>FDC13D38-32CE-45BC-914B-5536813E7845</string>
->>>>>>> FETCH_HEAD
+	<string>2BA159B7-88C5-470A-88CD-98A7A025C4CB</string>
 	<key>IDESourceControlProjectName</key>
 	<string>SpeakHere</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-<<<<<<< HEAD
-		<key>B0CD9FAF-2F0D-4EC7-A376-EE4A41743E5E</key>
-=======
-		<key>5C6B815D-04D0-4F2C-8A09-B48CB71BF333</key>
->>>>>>> FETCH_HEAD
+		<key>BEFB3C37-8EC7-46A2-A892-062518B09DF6</key>
 		<string>https://github.com/13911256582/SpeakHere-Speaker-Side.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>SpeakHere.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-<<<<<<< HEAD
-		<key>B0CD9FAF-2F0D-4EC7-A376-EE4A41743E5E</key>
-=======
-		<key>5C6B815D-04D0-4F2C-8A09-B48CB71BF333</key>
->>>>>>> FETCH_HEAD
+		<key>BEFB3C37-8EC7-46A2-A892-062518B09DF6</key>
 		<string>../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
@@ -37,26 +25,16 @@
 	<key>IDESourceControlProjectVersion</key>
 	<integer>110</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-<<<<<<< HEAD
-	<string>B0CD9FAF-2F0D-4EC7-A376-EE4A41743E5E</string>
-=======
-	<string>5C6B815D-04D0-4F2C-8A09-B48CB71BF333</string>
->>>>>>> FETCH_HEAD
+	<string>BEFB3C37-8EC7-46A2-A892-062518B09DF6</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-<<<<<<< HEAD
-			<string>B0CD9FAF-2F0D-4EC7-A376-EE4A41743E5E</string>
+			<string>BEFB3C37-8EC7-46A2-A892-062518B09DF6</string>
 			<key>IDESourceControlWCCName</key>
 			<string>SpeakHere</string>
-=======
-			<string>5C6B815D-04D0-4F2C-8A09-B48CB71BF333</string>
-			<key>IDESourceControlWCCName</key>
-			<string>SpeakHere-Speaker-Side</string>
->>>>>>> FETCH_HEAD
 		</dict>
 	</array>
 </dict>

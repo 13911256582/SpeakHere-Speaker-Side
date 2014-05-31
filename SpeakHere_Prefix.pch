@@ -52,4 +52,4 @@ Copyright (C) 2012 Apple Inc. All Rights Reserved.
 #import <UIKit/UIKit.h>
 #endif
 
-#define kBufferDurationSeconds .5
+#define kBufferDurationSeconds 0.005

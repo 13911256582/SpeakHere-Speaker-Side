@@ -165,9 +165,13 @@ enum {
                 
                 bytesWritten = [self.networkStream write:[dataToSend bytes] maxLength:[dataToSend length]];
                 
+                if ([dataToSend length] != bytesWritten) {
+                    NSLog(@"not all data being sent to network");
+                }
+                
                 self.canSendNow = FALSE;
                 
-                NSLog(@"%d bytes written", bytesWritten);
+                NSLog(@"%d bytes sending to network from queue", bytesWritten);
             }
             
             // If we don't have any data buffered, go read the next chunk of data.
@@ -240,3 +244,4 @@ enum {
 
 
 @end
+

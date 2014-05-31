@@ -134,7 +134,7 @@ void AQPlayer::AQBufferCallback(void *					inUserData,
         inCompleteAQBuffer->mAudioDataByteSize = voiceBufferSize;
     
         AudioQueueEnqueueBuffer(inAQ, inCompleteAQBuffer, 0, NULL);
-        NSLog(@"audio in queue %d", (unsigned int)inCompleteAQBuffer->mAudioDataByteSize);
+        //NSLog(@"audio in queue %d", (unsigned int)inCompleteAQBuffer->mAudioDataByteSize);
         
         outData = nil;
         voiceBuffer = nil;

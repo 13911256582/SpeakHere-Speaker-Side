@@ -41,7 +41,7 @@
                     <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                     <items>
-                        <navigationItem title="SpeakHere" id="17"/>
+                        <navigationItem title="无线喇叭" id="17"/>
                     </items>
                 </navigationBar>
                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" text="" textAlignment="center" lineBreakMode="tailTruncation" minimumFontSize="10" id="20">
@@ -60,40 +60,24 @@
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                 </view>
-                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="状态" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="GLV-D5-Lrk">
-                    <rect key="frame" x="13" y="54" width="161" height="21"/>
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="tzh-xd-jJ5">
+                    <rect key="frame" x="13" y="54" width="287" height="21"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" id="xrz-TS-cyL">
-                    <rect key="frame" x="244" y="7" width="37" height="37"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                </activityIndicatorView>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="Gon-Vp-IRX">
-                    <rect key="frame" x="264" y="50" width="30" height="30"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <state key="normal" title="取消">
-                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                    </state>
-                    <connections>
-                        <action selector="doCancel:" destination="21" eventType="touchUpInside" id="dxy-Nl-2pZ"/>
-                    </connections>
-                </button>
             </subviews>
             <color key="backgroundColor" red="0.52549022000000001" green="0.60392159000000001" blue="0.74509804999999996" alpha="1" colorSpace="deviceRGB"/>
             <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
         </view>
         <customObject id="21" customClass="SpeakHereController">
             <connections>
-                <outlet property="activityIndicator" destination="xrz-TS-cyL" id="Lue-dG-GPj"/>
                 <outlet property="btn_play" destination="12" id="27"/>
                 <outlet property="btn_record" destination="11" id="28"/>
-                <outlet property="cancelButton" destination="Gon-Vp-IRX" id="SKm-Bn-4ef"/>
                 <outlet property="fileDescription" destination="20" id="22"/>
                 <outlet property="lvlMeter_in" destination="19" id="23"/>
-                <outlet property="statusLabel" destination="GLV-D5-Lrk" id="RGj-Qj-K6S"/>
+                <outlet property="statusLabel" destination="tzh-xd-jJ5" id="uKN-1p-KlN"/>
             </connections>
         </customObject>
     </objects>

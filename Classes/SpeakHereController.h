@@ -79,6 +79,7 @@ Copyright (C) 2012 Apple Inc. All Rights Reserved.
 @property (nonatomic, retain)	UILabel				*fileDescription;
 @property (nonatomic, retain)	AQLevelMeter		*lvlMeter_in;
 
+
 @property (readonly)			AQPlayer			*player;
 @property (readonly)			AQRecorder			*recorder;
 @property						BOOL				playbackWasInterrupted;
@@ -88,9 +89,11 @@ Copyright (C) 2012 Apple Inc. All Rights Reserved.
 @property (strong, nonatomic)   Sender              *voiceSender;
 @property (strong, nonatomic)   Receiver            *voiceReceiver;
 
+@property (retain, nonatomic) IBOutlet UILabel      *statusLabel;
+
 - (IBAction)record: (id) sender;
 - (IBAction)play: (id) sender;
 
-//+ (NSMutableArray *)sharedInBufferArray;
++ (NSMutableArray *)sharedInBufferArray;
 
 @end
